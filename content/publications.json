@@ -1,0 +1,14 @@
+[
+  {
+    "slug": "autotruss",
+    "title": "Automatic Truss Design with Reinforcement Learning",
+    "authors": ["Weihua Du", "Jinglun Zhao", "Chao Yu", "Xingcheng Yao", "Zimeng Song", "Siyang Wu", "Ruifeng Luo", "Zhiyuan Liu", "Xianzhong Zhao", "Yi Wu"],
+    "equal_contributors": ["Weihua Du", "Jinglun Zhao"],
+    "venue": "IJCAI",
+    "year": 2023,
+    "summary": "AutoTruss combines Monte Carlo tree search with reinforcement learning to generate lightweight 2D and 3D truss layouts under physical constraints.",
+    "paper": "https://arxiv.org/abs/2306.15182",
+    "code": "https://github.com/StigLidu/AutoTruss",
+    "source": "https://arxiv.org/html/2306.15182v1"
+  }
+]
