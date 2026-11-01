@@ -84,6 +84,9 @@ def page(title: str, body: str, route: str = "", active: str = "overview", descr
         }
         article_meta = f'<meta property="article:published_time" content="{article["date"].isoformat()}">'
     schema = json.dumps(structured, ensure_ascii=False).replace("<", "\\u003c")
+    verification_meta = ""
+    if CONFIG.get("google_site_verification"):
+        verification_meta = f'<meta name="google-site-verification" content="{esc(CONFIG["google_site_verification"])}">'
     return f'''<!doctype html>
 <html lang="en">
 <head>
@@ -93,6 +96,7 @@ def page(title: str, body: str, route: str = "", active: str = "overview", descr
   <meta name="theme-color" content="#f8f7f2">
   <title>{esc(full_title)}</title>
   <meta name="description" content="{esc(description)}">
+  {verification_meta}
   <link rel="canonical" href="{esc(canonical)}">
   <meta property="og:type" content="{'article' if article else 'website'}">
   <meta property="og:title" content="{esc(full_title)}">
