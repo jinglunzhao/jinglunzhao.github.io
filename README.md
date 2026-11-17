@@ -116,3 +116,17 @@ The homepage puts the current role, PhD background, research summary, and profil
 links first. Three concise research areas are followed by selected publications
 (including an explicit co-first-author label), code, and writing. The writing
 preview stays compact until articles are published.
+
+## Interactive articles
+
+A post can set `standalone_html: interactive/spatial-planning.html` to publish a
+complete, self-contained HTML document stored under `content/`. Its Markdown
+metadata still controls the Writing list, homepage, sitemap, and Atom feed. The
+Markdown body supplies the feed summary, while `reading_minutes` can specify a
+reading-time estimate for the full interactive article. The same draft and date
+filters apply. Source paths must stay inside `content/`.
+
+The spatial planning article is published at `/writing/spatial-planning/`. Its
+HTML includes the EN/中文 toggle, parking and sofa replay data, styles, and scripts.
+To update it, replace `content/interactive/spatial-planning.html` with the newly
+built article, run the build and link checks, then push to `main`.

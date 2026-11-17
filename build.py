@@ -292,10 +292,21 @@ def read_posts() -> list[dict]:
                 if token.tag == "h2":
                     headings.append((identifier, label))
         plain_text = " ".join(token.content for token in tokens if token.type in {"inline", "fence"})
+        standalone = None
+        if meta.get("standalone_html"):
+            source_html = (ROOT / "content" / meta["standalone_html"]).resolve()
+            if not source_html.is_relative_to((ROOT / "content").resolve()) or source_html.suffix != ".html":
+                raise ValueError(f"standalone_html must name an HTML file within content/ in {source.name}")
+            standalone = source_html.read_text(encoding="utf-8")
+        minutes = max(1, math.ceil(len(plain_text.split()) / 220))
+        if meta.get("reading_minutes"):
+            minutes = int(meta["reading_minutes"])
+            if minutes < 1:
+                raise ValueError(f"reading_minutes must be positive in {source.name}")
         posts.append({"title": meta["title"], "summary": meta["summary"], "date": published, "slug": slug,
                       "tags": [tag.strip() for tag in meta.get("tags", "").split(",") if tag.strip()],
                       "html": MD.renderer.render(tokens, MD.options, {}), "headings": headings,
-                      "minutes": max(1, math.ceil(len(plain_text.split()) / 220))})
+                      "minutes": minutes, "standalone_html": standalone})
     return sorted(posts, key=lambda p: (p["date"], p["slug"]), reverse=True)
 
 
@@ -333,7 +344,10 @@ def main() -> None:
     write("writing/index.html", page("Writing", writing_page(posts), "writing/", "writing"))
     for post in posts:
         route = "writing/" + post["slug"] + "/"
-        write(route + "index.html", page(post["title"], post_page(post), route, "writing", post["summary"], post))
+        article_html = post["standalone_html"]
+        if article_html is None:
+            article_html = page(post["title"], post_page(post), route, "writing", post["summary"], post)
+        write(route + "index.html", article_html)
     write("404.html", page("Page not found", f'<section class="not-found"><p class="eyebrow">404 / A SMALL DETOUR</p><h1>This page wandered off.</h1><p>The address may have changed, or the page doesn’t exist yet.</p><a class="button button-primary" href="{path()}">Back to the homepage <span aria-hidden="true">↗</span></a></section>', "404.html", ""))
     write(".nojekyll", "")
     feeds(posts)
